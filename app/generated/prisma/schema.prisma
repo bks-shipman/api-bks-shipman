@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//////////////////////////////////
+// ENUM
+//////////////////////////////////
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+//////////////////////////////////
+// USER / ACCOUNT
+//////////////////////////////////
+
+model User {
+  id       Int           @id @default(autoincrement())
+  name     String
+  email    String        @unique
+  password String
+  role     Role
+  status   AccountStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// COMPANY PROFILE
+//////////////////////////////////
+
+model Company {
+  id        Int     @id @default(autoincrement())
+  name      String
+  address   String
+  gmapsUrl  String?
+  linkedin  String?
+  facebook  String?
+  instagram String?
+  tiktok    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// VISION & MISSION
+//////////////////////////////////
+
+model Vision {
+  id          Int    @id @default(autoincrement())
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Mission {
+  id          Int    @id @default(autoincrement())
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// CORE VALUES (TATA NILAI)
+//////////////////////////////////
+
+model CoreValue {
+  id    Int    @id @default(autoincrement())
+  title String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// SERVICES / LAYANAN
+//////////////////////////////////
+
+model Service {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// VESSEL TYPE (MASTER)
+//////////////////////////////////
+
+model VesselType {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  vessels Vessel[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// VESSELS
+//////////////////////////////////
+
+model Vessel {
+  id          Int    @id @default(autoincrement())
+  name        String
+  image       String
+  description String
+
+  vesselTypeId Int
+  vesselType   VesselType @relation(fields: [vesselTypeId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([vesselTypeId])
+}
+
+//////////////////////////////////
+// EXHIBITIONS / KEGIATAN KAPAL
+//////////////////////////////////
+
+model Exhibition {
+  id          Int      @id @default(autoincrement())
+  image       String
+  description String
+  date        DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// ABOUT US
+//////////////////////////////////
+
+model AboutUs {
+  id          Int    @id @default(autoincrement())
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
