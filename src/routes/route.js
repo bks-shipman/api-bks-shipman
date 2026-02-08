@@ -10,11 +10,13 @@ import * as userController from '../controllers/user.controller.js';
 import * as vesselController from '../controllers/vessel.controller.js';
 import * as vesselTypeController from '../controllers/vesselType.controller.js';
 import * as visionController from '../controllers/vision.controller.js';
+import * as landingPageController from '../controllers/landingPage.controller.js';
 
 const route = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-
+// Route Landing Page
+route.get('/landing-page', landingPageController.getLandingPageData);
 
 
 // Route BackOffice
