@@ -45,7 +45,7 @@ route.post('/about-us', auth, authorize("ADMIN"), aboutUsController.createOrUpda
 
 // Route Captain
 route.get('/captain', auth, authorize("SUPERADMIN", "ADMIN"), captainController.getCaptain);
-route.post('/captain', upload.single("photo"), authorize("ADMIN"), auth, captainController.createOrUpdateCaptain);
+route.post('/captain', upload.single("photo"), auth, authorize("ADMIN"), captainController.createOrUpdateCaptain);
 
 // Route Career
 route.get('/careers', auth, authorize("SUPERADMIN", "ADMIN"), careerController.getCareers);
