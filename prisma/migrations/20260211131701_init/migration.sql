@@ -4,6 +4,9 @@ CREATE TYPE "Role" AS ENUM ('SUPERADMIN', 'ADMIN');
 -- CreateEnum
 CREATE TYPE "AccountStatus" AS ENUM ('ACTIVE', 'SUSPENDED');
 
+-- CreateEnum
+CREATE TYPE "TitleType" AS ENUM ('HERO', 'SERVICES', 'ABOUTUS', 'VESSELS', 'EXHIBITIONS', 'CAREERS', 'VM', 'GALLERY', 'COREVALUES');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
@@ -23,6 +26,8 @@ CREATE TABLE "Company" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "address" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "phone_code" TEXT NOT NULL,
     "gmapsUrl" TEXT,
     "linkedin" TEXT,
     "facebook" TEXT,
@@ -101,6 +106,7 @@ CREATE TABLE "Vessel" (
 -- CreateTable
 CREATE TABLE "Exhibition" (
     "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
     "photo" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
@@ -120,6 +126,43 @@ CREATE TABLE "AboutUs" (
     CONSTRAINT "AboutUs_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Career" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Career_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Captain" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "quote" TEXT NOT NULL,
+    "photo" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Captain_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Title" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "title2" TEXT,
+    "subtitle" TEXT,
+    "tag" TEXT,
+    "type" "TitleType" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Title_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -128,6 +171,9 @@ CREATE UNIQUE INDEX "VesselType_name_key" ON "VesselType"("name");
 
 -- CreateIndex
 CREATE INDEX "Vessel_vesselTypeId_idx" ON "Vessel"("vesselTypeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Title_type_key" ON "Title"("type");
 
 -- AddForeignKey
 ALTER TABLE "Vessel" ADD CONSTRAINT "Vessel_vesselTypeId_fkey" FOREIGN KEY ("vesselTypeId") REFERENCES "VesselType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

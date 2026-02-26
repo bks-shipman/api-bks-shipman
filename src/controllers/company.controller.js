@@ -10,10 +10,10 @@ export const getCompany = async (req, res) => {
 };
 
 export const createOrUpdateCompany = async (req, res) => {
-    const { name, address, gmapsUrl, linkedin, facebook, instagram, tiktok } = req.body;
+    const { name, email, address, phone, phone_code, gmapsUrl, linkedin, facebook, instagram, tiktok } = req.body;
 
-    if (!name || !address) {
-        return res.status(400).json({ message: `Kolom ${!name ? "Nama" : !address ? "Alamat" : "GMaps URL"} harus diisi` });
+    if (!name || !email || !address || !phone || !phone_code) {
+        return res.status(400).json({ message: `Kolom ${!name ? "Nama" : !email ? "Email" : !address ? "Alamat" : !phone ? "Nomor Telepon" : "Kode Telepon"} harus diisi` });
     }
 
     const existing = await prisma.company.findFirst();
@@ -21,10 +21,10 @@ export const createOrUpdateCompany = async (req, res) => {
     const data = existing
         ? await prisma.company.update({
             where: { id: existing.id },
-            data: { name, address, gmapsUrl, linkedin, facebook, instagram, tiktok }
+            data: { name, email, address, phone, phone_code, gmapsUrl, linkedin, facebook, instagram, tiktok }
         })
         : await prisma.company.create({
-            data: { name, address, gmapsUrl, linkedin, facebook, instagram, tiktok }
+            data: { name, email, address, phone, phone_code, gmapsUrl, linkedin, facebook, instagram, tiktok }
         });
 
     res.status(201).json({ message: "Company berhasil disimpan", data });

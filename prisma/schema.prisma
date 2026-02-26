@@ -28,6 +28,19 @@ enum AccountStatus {
   SUSPENDED
 }
 
+enum TitleType {
+  HERO
+  SERVICES
+  ABOUTUS
+  VESSELS
+  EXHIBITIONS
+  CAREERS
+  VM
+  GALLERY
+  COREVALUES
+
+}
+
 //////////////////////////////////
 // USER / ACCOUNT
 //////////////////////////////////
@@ -49,14 +62,17 @@ model User {
 //////////////////////////////////
 
 model Company {
-  id        Int    @id @default(autoincrement())
-  name      String
-  address   String
-  gmapsUrl  String?
-  linkedin  String?
-  facebook  String?
-  instagram String?
-  tiktok    String?
+  id          Int    @id @default(autoincrement())
+  name        String
+  email       String
+  address     String
+  phone       String
+  phone_code  String
+  gmapsUrl    String?
+  linkedin    String?
+  facebook    String?
+  instagram   String?
+  tiktok      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -130,6 +146,9 @@ model Vessel {
   name          String
   photo         String
   description   String
+  imo           String
+  year          Int
+  country       String
 
   vesselTypeId  Int
   vesselType    VesselType @relation(fields: [vesselTypeId], references: [id], onDelete: Restrict)
@@ -146,6 +165,7 @@ model Vessel {
 
 model Exhibition {
   id          Int      @id @default(autoincrement())
+  name        String
   photo       String
   description String
   date        DateTime
@@ -161,6 +181,49 @@ model Exhibition {
 model AboutUs {
   id          Int    @id @default(autoincrement())
   description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// CAREER
+//////////////////////////////////
+
+model Career {
+  id          Int    @id @default(autoincrement())
+  title        String
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// CAPTAIN
+//////////////////////////////////
+
+model Captain {
+  id          Int    @id @default(autoincrement())
+  name        String
+  quote       String
+  photo       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
+// TITLE
+//////////////////////////////////
+
+model Title {
+  id          Int       @id @default(autoincrement())
+  title       String
+  title2      String?
+  subtitle    String?
+  tag         String?
+  type        TitleType @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

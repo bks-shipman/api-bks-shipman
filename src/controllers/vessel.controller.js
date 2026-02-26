@@ -3,12 +3,17 @@ import { deleteImage, upload } from "../middleware/cloudinary.js";
 
 export const getVessels = async (req, res) => {
     try {
-        const data = await prisma.vessel.findMany({
+        const vessels = await prisma.vessel.findMany({
             include: {
-                vesselType: true,
-            },
+                vesselType: {
+                    select: { name: true },
+                },
+            }
         });
-        res.json(data);
+        const types = await prisma.vesselType.findMany({
+            orderBy: { name: "asc" },
+        });
+        res.json({ vessels, types });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -16,10 +21,10 @@ export const getVessels = async (req, res) => {
 
 export const createVessel = async (req, res) => {
     const photo = req.file;
-    const { name, description, vesselTypeId } = req.body;
+    const { name, description, imo, year, country, vesselTypeId } = req.body;
 
-    if (!photo || !name || !description || !vesselTypeId) {
-        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !name ? "Nama" : !description ? "Deskripsi" : "Tipe Kapal"} harus diisi` });
+    if (!photo || !name || !description || !imo || !year || !country || !vesselTypeId) {
+        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !name ? "Nama" : !description ? "Deskripsi" : !imo ? "IMO" : !year ? "Tahun" : !country ? "Negara" : "Tipe Kapal"} harus diisi` });
     }
     const cloudinaryPhoto = await upload(photo, "vessels");
 
@@ -35,6 +40,9 @@ export const createVessel = async (req, res) => {
         data: {
             name,
             description,
+            imo,
+            year: Number(year),
+            country,
             photo: cloudinaryPhoto.url,
             vesselTypeId: Number(vesselType.id),
         },
@@ -48,8 +56,8 @@ export const createVessel = async (req, res) => {
 
 export const updateVessel = async (req, res) => {
     const { id } = req.params;
-    const photo = req.file;
-    const { name, description, vesselTypeId } = req.body;
+    const photoFile = req.file; // file upload
+    const { name, description, imo, year, country, vesselTypeId, photo } = req.body;
 
     const existing = await prisma.vessel.findUnique({
         where: { id: Number(id) },
@@ -59,29 +67,49 @@ export const updateVessel = async (req, res) => {
         return res.status(404).json({ message: "Vessel tidak ditemukan" });
     }
 
-    if (!photo || !name || !description || !vesselTypeId) {
-        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !name ? "Nama" : !description ? "Deskripsi" : "Tipe Kapal"} harus diisi` });
+    // VALIDASI TANPA FOTO
+    if (!name || !description || !imo || !year || !country || !vesselTypeId) {
+        return res.status(400).json({
+            message: "Semua field selain foto wajib diisi",
+        });
     }
 
-    let fotoUrl;
-    const publicId = existing.photo.split("/").pop().split(".")[0];
-    const publicFolder = existing.photo.split("/").slice(-2, -1)[0];
-    if (photo) {
+    let fotoUrl = existing.photo;
+
+    // =============================
+    // 1️⃣ Jika upload file baru
+    // =============================
+    if (photoFile) {
+        const publicId = existing.photo.split("/").pop().split(".")[0];
+        const publicFolder = existing.photo.split("/").slice(-2, -1)[0];
+
         await deleteImage(publicId, publicFolder);
-        const uploadResult = await upload(photo, publicFolder);
 
+
+        const uploadResult = await upload(photoFile, publicFolder);
         fotoUrl = uploadResult.url;
-    } else if (typeof photo === "string" && photo.trim() !== "") {
-        fotoUrl = photo;
-    } else {
-        fotoUrl = existing.photo;
     }
+
+    // =============================
+    // 2️⃣ Jika kirim link string
+    // =============================
+    else if (photo && typeof photo === "string" && photo.trim() !== "") {
+        fotoUrl = photo;
+    }
+
+    // =============================
+    // 3️⃣ Jika tidak kirim apa-apa
+    // =============================
+    // tetap pakai existing.photo (sudah default)
 
     const updated = await prisma.vessel.update({
         where: { id: Number(id) },
         data: {
             name,
             description,
+            imo,
+            year: Number(year),
+            country,
             photo: fotoUrl,
             vesselTypeId: Number(vesselTypeId),
         },
@@ -104,6 +132,6 @@ export const deleteVessel = async (req, res) => {
             await deleteImage(publicId, publicFolder);
         }
     }
-    await prisma.exhibition.deleteMany({ where: { id: { in: req.body.id.map(Number) } } });
+    await prisma.vessel.deleteMany({ where: { id: { in: req.body.id.map(Number) } } });
     res.json({ message: "Vessel dihapus" });
 };

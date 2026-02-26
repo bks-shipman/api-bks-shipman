@@ -41,7 +41,9 @@ export const upload = async (file, folder) => {
 
 export const deleteImage = async (publicId, publicFolder) => {
     try {
-        const result = await cloudinary.uploader.destroy(`bks-shipman/${publicFolder}/${publicId}`, { resource_type: 'image' });
+        const publicCloudinary = `bks-shipman/${publicFolder}/${publicId}`
+
+        const result = await cloudinary.uploader.destroy(publicCloudinary, { resource_type: 'image' });
         if (result.result === "not found") {
             throw new Error("Gambar tidak ditemukan di Cloudinary");
         }

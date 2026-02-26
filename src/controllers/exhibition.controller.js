@@ -12,14 +12,14 @@ export const getExhibitions = async (req, res) => {
 
 export const createExhibition = async (req, res) => {
     const photo = req.file;
-    const { description, date } = req.body;
-    if (!photo || !description || !date) {
-        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !description ? "Deskripsi" : "Tanggal Acara"} harus diisi` });
+    const { description, date, name } = req.body;
+    if (!photo || !description || !date || !name) {
+        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !description ? "Deskripsi" : !date ? "Tanggal Acara" : "Nama"} harus diisi` });
     }
     const cloudinaryPhoto = await upload(photo, "exhibitions");
 
     const data = await prisma.exhibition.create({
-        data: { photo: cloudinaryPhoto.url, description, date: new Date(date).toISOString() }
+        data: { name, photo: cloudinaryPhoto.url, description, date: new Date(date).toISOString() }
     });
 
     res.json({ message: "Exhibition dibuat", data });
@@ -27,38 +27,47 @@ export const createExhibition = async (req, res) => {
 
 export const updateExhibition = async (req, res) => {
     const { id } = req.params;
-    const photo = req.file;
-    const { description, date } = req.body;
+    const photoFile = req.file; // file upload
+    const { description, date, name, photo } = req.body;
 
-    const exhibition = await prisma.exhibition.findUnique({
+    const existing = await prisma.exhibition.findUnique({
         where: { id: Number(id) },
     });
 
-    if (!exhibition) {
+    if (!existing) {
         return res.status(400).json({ message: "Exhibition tidak ditemukan" });
     }
 
-    if (!photo || !description || !date) {
-        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !description ? "Deskripsi" : "Tanggal Acara"} harus diisi` });
+    if (!description || !date || !name) {
+        return res.status(400).json({ message: `Kolom ${!description ? "Deskripsi" : !date ? "Tanggal Acara" : "Nama"} harus diisi` });
     }
 
-    let fotoUrl;
-    const publicId = exhibition.photo.split("/").pop().split(".")[0];
-    const publicFolder = exhibition.photo.split("/").slice(-2, -1)[0];
-    if (photo) {
-        await deleteImage(publicId, publicFolder);
-        const uploadResult = await upload(photo, publicFolder);
+    let fotoUrl = existing.photo;
 
+    // =============================
+    // 1️⃣ Jika upload file baru
+    // =============================
+    if (photoFile) {
+        const publicId = existing.photo.split("/").pop().split(".")[0];
+        const publicFolder = existing.photo.split("/").slice(-2, -1)[0];
+
+        await deleteImage(publicId, publicFolder);
+
+
+        const uploadResult = await upload(photoFile, publicFolder);
         fotoUrl = uploadResult.url;
-    } else if (typeof photo === "string" && photo.trim() !== "") {
+    }
+
+    // =============================
+    // 2️⃣ Jika kirim link string
+    // =============================
+    else if (photo && typeof photo === "string" && photo.trim() !== "") {
         fotoUrl = photo;
-    } else {
-        fotoUrl = exhibition.photo;
     }
 
     const data = await prisma.exhibition.update({
         where: { id: Number(id) },
-        data: { photo: fotoUrl, description, date: new Date(date).toISOString() }
+        data: { name, photo: fotoUrl, description, date: new Date(date).toISOString() }
     });
 
     res.json({ message: "Exhibition diperbarui", data });

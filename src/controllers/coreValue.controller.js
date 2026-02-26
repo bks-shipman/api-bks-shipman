@@ -31,9 +31,11 @@ export const updateCoreValue = async (req, res) => {
 };
 
 export const deleteCoreValue = async (req, res) => {
-    await prisma.coreValue.deleteMany({
-        where: { id: { in: req.body.id.map(Number) } }
+    const { id } = req.params;
+
+    await prisma.coreValue.delete({
+        where: { id: Number(id) },
     });
 
-    res.json({ message: "Core Value dihapus" });
+    res.json({ message: "Core Value berhasil dihapus" });
 };
