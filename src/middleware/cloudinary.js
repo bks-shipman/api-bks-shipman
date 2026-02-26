@@ -10,6 +10,8 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const CLOUDINARY_FOLDER = process.env.CLOUDINARY_FOLDER || "bks-shipman";
+
 export const upload = async (file, folder) => {
     try {
         if (!file || !file.buffer) {
@@ -22,7 +24,7 @@ export const upload = async (file, folder) => {
             .toBuffer();
 
         const result = await new Promise((resolve, reject) => {
-            const stream = cloudinary.uploader.upload_stream({ folder: `bks-shipman/${folder || ""}` }, (error, result) => {
+            const stream = cloudinary.uploader.upload_stream({ folder: `${CLOUDINARY_FOLDER}/${folder || ""}` }, (error, result) => {
                 if (error) reject(error);
                 else resolve(result);
             });
@@ -41,7 +43,7 @@ export const upload = async (file, folder) => {
 
 export const deleteImage = async (publicId, publicFolder) => {
     try {
-        const publicCloudinary = `bks-shipman/${publicFolder}/${publicId}`
+        const publicCloudinary = `${CLOUDINARY_FOLDER}/${publicFolder}/${publicId}`
 
         const result = await cloudinary.uploader.destroy(publicCloudinary, { resource_type: 'image' });
         if (result.result === "not found") {
