@@ -16,6 +16,7 @@ import * as visionController from '../controllers/vision.controller.js';
 import * as landingPageController from '../controllers/landingPage.controller.js';
 import * as authController from '../controllers/auth.controller.js';
 import * as dashboardController from '../controllers/dashboard.controller.js';
+import * as crewingController from '../controllers/crewing.controller.js';
 import { auth } from '../middleware/auth.js';
 import { authorize } from '../middleware/auth.js';
 
@@ -56,6 +57,10 @@ route.delete('/careers', auth, authorize("ADMIN"), careerController.deleteCareer
 // Route Company
 route.get('/company', auth, authorize("SUPERADMIN", "ADMIN"), companyController.getCompany);
 route.post('/company', auth, authorize("ADMIN"), companyController.createOrUpdateCompany);
+
+// Route Crewing
+route.get('/crewing', auth, authorize("SUPERADMIN", "ADMIN"), crewingController.getCrewing);
+route.post('/crewing', auth, authorize("ADMIN"), crewingController.createOrUpdateCrewing);
 
 // Route Core Value
 route.get('/core-values', auth, authorize("SUPERADMIN", "ADMIN"), coreValueController.getCoreValues);

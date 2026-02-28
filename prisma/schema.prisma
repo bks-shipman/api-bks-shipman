@@ -79,6 +79,19 @@ model Company {
 }
 
 //////////////////////////////////
+// TITLE
+//////////////////////////////////
+model Crewing {
+  id          Int    @id @default(autoincrement())
+  email       String
+  phone       String
+  phone_code  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
 // VISION & MISSION
 //////////////////////////////////
 
