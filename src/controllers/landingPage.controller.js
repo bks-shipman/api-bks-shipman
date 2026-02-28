@@ -176,7 +176,7 @@ export const getCareerData = async (req, res) => {
             career,
             phone,
             phoneCode,
-            email,
+            email
         ] = await Promise.all([
             prisma.title.findFirst({
                 where: { type: "CAREERS" },
@@ -194,7 +194,7 @@ export const getCareerData = async (req, res) => {
             career,
             phone,
             phoneCode,
-            address
+            email
         });
     } catch (error) {
         console.error(error);
