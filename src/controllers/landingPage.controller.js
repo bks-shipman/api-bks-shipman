@@ -177,7 +177,6 @@ export const getCareerData = async (req, res) => {
             phone,
             phoneCode,
             email,
-            address
         ] = await Promise.all([
             prisma.title.findFirst({
                 where: { type: "CAREERS" },
@@ -185,10 +184,9 @@ export const getCareerData = async (req, res) => {
             prisma.career.findMany({
                 orderBy: { createdAt: "desc" },
             }),
-            prisma.company.findFirst().then(company => company ? company.phone : null),
-            prisma.company.findFirst().then(company => company ? company.phone_code : null),
-            prisma.company.findFirst().then(company => company ? company.email : null),
-            prisma.company.findFirst().then(company => company ? company.address : null),
+            prisma.crewing.findFirst().then(crewing => crewing ? crewing.phone : null),
+            prisma.crewing.findFirst().then(crewing => crewing ? crewing.phone_code : null),
+            prisma.crewing.findFirst().then(crewing => crewing ? crewing.email : null),
         ]);
 
         res.json({
@@ -196,7 +194,6 @@ export const getCareerData = async (req, res) => {
             career,
             phone,
             phoneCode,
-            email,
             address
         });
     } catch (error) {
