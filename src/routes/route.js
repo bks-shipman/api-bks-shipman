@@ -50,8 +50,8 @@ route.post('/captain', upload.single("photo"), auth, authorize("ADMIN"), captain
 
 // Route Career
 route.get('/careers', auth, authorize("SUPERADMIN", "ADMIN"), careerController.getCareers);
-route.post('/careers', auth, authorize("ADMIN"), careerController.createCareer);
-route.put('/careers/:id', auth, authorize("ADMIN"), careerController.updateCareer);
+route.post('/careers', auth, authorize("ADMIN"), upload.single("photo"), careerController.createCareer);
+route.put('/careers/:id', auth, authorize("ADMIN"), upload.single("photo"), careerController.updateCareer);
 route.delete('/careers', auth, authorize("ADMIN"), careerController.deleteCareer);
 
 // Route Company
