@@ -1,4 +1,5 @@
 import prisma from "../../prisma/client.js";
+import { deleteImage, upload } from "../middleware/cloudinary.js";
 
 export const getCareers = async (req, res) => {
     try {
