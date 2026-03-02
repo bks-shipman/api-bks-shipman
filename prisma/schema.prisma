@@ -204,9 +204,10 @@ model AboutUs {
 //////////////////////////////////
 
 model Career {
-  id          Int    @id @default(autoincrement())
-  title        String
-  description String
+  id              Int    @id @default(autoincrement())
+  title           String
+  positions       String
+  requirements    String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -10,20 +10,20 @@ export const getCareers = async (req, res) => {
 };
 
 export const createCareer = async (req, res) => {
-    const { title, description } = req.body;
-    if (!title || !description) {
-        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : "Deskripsi"} wajib diisi` });
+    const { title, positions, requirements } = req.body;
+    if (!title || !positions || !requirements) {
+        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !positions ? "Posisi" : "Persyaratan"} wajib diisi` });
     }
 
-    const data = await prisma.career.create({ data: { title, description } });
+    const data = await prisma.career.create({ data: { title, positions, requirements } });
     res.json({ message: "Career dibuat", data });
 };
 
 export const updateCareer = async (req, res) => {
     const { id } = req.params;
-    const { title, description } = req.body;
-    if (!title || !description) {
-        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : "Deskripsi"} wajib diisi` });
+    const { title, positions, requirements } = req.body;
+    if (!title || !positions || !requirements) {
+        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !positions ? "Posisi" : "Persyaratan"} wajib diisi` });
     }
     const career = await prisma.career.findUnique({
         where: { id: Number(id) },
