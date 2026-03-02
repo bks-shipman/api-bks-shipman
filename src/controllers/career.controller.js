@@ -19,7 +19,7 @@ export const createCareer = async (req, res) => {
     }
 
     const cloudinaryPhoto = await upload(photo, "careers");
-    const data = await prisma.career.create({ data: { title, positions, requirements, photo: cloudinaryPhoto.secure_url } });
+    const data = await prisma.career.create({ data: { title, positions, requirements, photo: cloudinaryPhoto.url } });
     res.json({ message: "Career dibuat", data });
 };
 
