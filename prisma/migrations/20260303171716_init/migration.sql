@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "TitleType" ADD VALUE 'CERTIFICATES';

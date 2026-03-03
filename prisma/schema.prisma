@@ -38,6 +38,7 @@ enum TitleType {
   VM
   GALLERY
   COREVALUES
+  CERTIFICATES
 
 }
 

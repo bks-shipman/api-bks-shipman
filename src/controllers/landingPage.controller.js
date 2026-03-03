@@ -94,18 +94,28 @@ export const getLandingPageData = async (req, res) => {
 export const getAboutUsData = async (req, res) => {
     try {
         const [
-            titles,
+            aboutTitles,
+            certificateTitles,
             aboutUs,
+            certificates
         ] = await Promise.all([
             prisma.title.findFirst({
                 where: { type: "ABOUTUS" },
             }),
+            prisma.title.findFirst({
+                where: { type: "CERTIFICATES" },
+            }),
             prisma.aboutUs.findFirst(),
+            prisma.certificate.findMany({
+                orderBy: { createdAt: "desc" },
+            }),
         ]);
 
         res.json({
-            titles,
+            aboutTitles,
+            certificateTitles,
             aboutUs,
+            certificates
         });
     } catch (error) {
         console.error(error);
