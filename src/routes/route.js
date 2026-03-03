@@ -17,6 +17,7 @@ import * as landingPageController from '../controllers/landingPage.controller.js
 import * as authController from '../controllers/auth.controller.js';
 import * as dashboardController from '../controllers/dashboard.controller.js';
 import * as crewingController from '../controllers/crewing.controller.js';
+import * as certificateController from '../controllers/certificate.controller.js';
 import { auth } from '../middleware/auth.js';
 import { authorize } from '../middleware/auth.js';
 
@@ -53,6 +54,12 @@ route.get('/careers', auth, authorize("SUPERADMIN", "ADMIN"), careerController.g
 route.post('/careers', auth, authorize("ADMIN"), upload.single("photo"), careerController.createCareer);
 route.put('/careers/:id', auth, authorize("ADMIN"), upload.single("photo"), careerController.updateCareer);
 route.delete('/careers', auth, authorize("ADMIN"), careerController.deleteCareer);
+
+// Route Career
+route.get('/certificates', auth, authorize("SUPERADMIN", "ADMIN"), certificateController.getCertificates);
+route.post('/certificates', auth, authorize("ADMIN"), upload.single("file"), certificateController.createCertificate);
+route.put('/certificates/:id', auth, authorize("ADMIN"), upload.single("file"), certificateController.updateCertificate);
+route.delete('/certificates', auth, authorize("ADMIN"), certificateController.deleteCertificate);
 
 // Route Company
 route.get('/company', auth, authorize("SUPERADMIN", "ADMIN"), companyController.getCompany);

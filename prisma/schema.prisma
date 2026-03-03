@@ -200,6 +200,19 @@ model AboutUs {
 }
 
 //////////////////////////////////
+// CERTIFICATE
+//////////////////////////////////
+
+model Certificate {
+  id          Int    @id @default(autoincrement())
+  name        String
+  file        String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////
 // CAREER
 //////////////////////////////////
 
