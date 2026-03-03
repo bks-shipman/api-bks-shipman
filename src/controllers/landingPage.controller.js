@@ -4,6 +4,7 @@ export const getLandingPageData = async (req, res) => {
     try {
         const [
             captain,
+            careers,
             company,
             vision,
             missions,
@@ -19,6 +20,7 @@ export const getLandingPageData = async (req, res) => {
             aboutUs,
         ] = await Promise.all([
             prisma.captain.findFirst(),
+            prisma.career.findMany(),
             prisma.company.findFirst(),
             prisma.vision.findFirst(),
             prisma.mission.findFirst(),
@@ -59,6 +61,7 @@ export const getLandingPageData = async (req, res) => {
 
         const vesselsCount = vessels.length;
         const exhibitionsCount = exhibitions.length;
+        const careersCount = careers.length;
 
         res.json({
             captain,
@@ -75,6 +78,7 @@ export const getLandingPageData = async (req, res) => {
             gallery,
             vesselsCount,
             exhibitionsCount,
+            careersCount,
             aboutUs,
         });
 
