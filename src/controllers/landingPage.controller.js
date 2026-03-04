@@ -222,12 +222,18 @@ export const getFooterData = async (req, res) => {
     try {
         const [
             company,
+            vesselType
         ] = await Promise.all([
             prisma.company.findFirst(),
+            prisma.vesselType.findMany({
+                orderBy: { id: "asc" },
+                take: 4
+            })
         ]);
 
         res.json({
             company,
+            vesselType
 
         });
     } catch (error) {
