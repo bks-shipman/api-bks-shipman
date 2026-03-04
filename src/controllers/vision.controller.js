@@ -6,10 +6,10 @@ export const getVision = async (req, res) => {
 };
 
 export const createOrUpdateVision = async (req, res) => {
-    const { description } = req.body;
+    const { description, description_en } = req.body;
 
-    if (!description) {
-        return res.status(400).json({ message: "Deskripsi visi wajib diisi" });
+    if (!description || !description_en) {
+        return res.status(400).json({ message: "Deskripsi visi dan deskripsi visi (EN) wajib diisi" });
     }
 
     const existing = await prisma.vision.findFirst();
@@ -17,10 +17,10 @@ export const createOrUpdateVision = async (req, res) => {
     const data = existing
         ? await prisma.vision.update({
             where: { id: existing.id },
-            data: { description },
+            data: { description, description_en },
         })
         : await prisma.vision.create({
-            data: { description },
+            data: { description, description_en },
         });
 
     res.json({

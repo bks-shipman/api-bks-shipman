@@ -10,7 +10,7 @@ export const getAboutUs = async (req, res) => {
 };
 
 export const createOrUpdateAboutUs = async (req, res) => {
-    const { description } = req.body;
+    const { description, description_en } = req.body;
 
     if (!description) {
         return res.status(400).json({ message: "Deskripsi harus diisi" });
@@ -21,10 +21,10 @@ export const createOrUpdateAboutUs = async (req, res) => {
     const data = existing
         ? await prisma.aboutUs.update({
             where: { id: existing.id },
-            data: { description },
+            data: { description, description_en },
         })
         : await prisma.aboutUs.create({
-            data: { description },
+            data: { description, description_en },
         });
 
     res.status(200).json({

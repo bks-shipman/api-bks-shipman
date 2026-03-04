@@ -10,20 +10,20 @@ export const getTitles = async (req, res) => {
 };
 
 export const createTitle = async (req, res) => {
-    const { title, title2, subtitle, type, tag } = req.body;
-    if (!title || !type) {
-        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : "Tipe"} wajib diisi` });
+    const { title, title_en, title2, title2_en, subtitle, subtitle_en, type, tag, tag_en } = req.body;
+    if (!title || !type || !title_en) {
+        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !title_en ? "Judul (EN)" : "Tipe"} wajib diisi` });
     }
 
-    const data = await prisma.title.create({ data: { title, title2, subtitle, type, tag } });
+    const data = await prisma.title.create({ data: { title, title_en, title2, title2_en, subtitle, subtitle_en, type, tag, tag_en } });
     res.json({ message: "Title dibuat", data });
 };
 
 export const updateTitle = async (req, res) => {
     const { id } = req.params;
-    const { title, title2, subtitle, type, tag } = req.body;
-    if (!title || !type) {
-        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : "Tipe"} wajib diisi` });
+    const { title, title_en, type } = req.body;
+    if (!title || !type || !title_en) {
+        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !title_en ? "Judul (EN)" : "Tipe"} wajib diisi` });
     }
     const titleData = await prisma.title.findUnique({
         where: { id: Number(id) },

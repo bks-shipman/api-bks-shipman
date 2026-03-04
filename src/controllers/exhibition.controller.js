@@ -12,14 +12,14 @@ export const getExhibitions = async (req, res) => {
 
 export const createExhibition = async (req, res) => {
     const photo = req.file;
-    const { description, date, name } = req.body;
-    if (!photo || !description || !date || !name) {
-        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !description ? "Deskripsi" : !date ? "Tanggal Acara" : "Nama"} harus diisi` });
+    const { description, description_en, date, name, name_en } = req.body;
+    if (!photo || !description || !description_en || !date || !name || !name_en) {
+        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !description ? "Deskripsi" : !description_en ? "Deskripsi (EN)" : !date ? "Tanggal Acara" : !name ? "Nama" : "Nama (EN)"} harus diisi` });
     }
     const cloudinaryPhoto = await upload(photo, "exhibitions");
 
     const data = await prisma.exhibition.create({
-        data: { name, photo: cloudinaryPhoto.url, description, date: new Date(date).toISOString() }
+        data: { name, name_en, photo: cloudinaryPhoto.url, description, description_en, date: new Date(date).toISOString() }
     });
 
     res.json({ message: "Exhibition dibuat", data });
@@ -28,7 +28,7 @@ export const createExhibition = async (req, res) => {
 export const updateExhibition = async (req, res) => {
     const { id } = req.params;
     const photoFile = req.file; // file upload
-    const { description, date, name, photo } = req.body;
+    const { description, description_en, date, name, name_en, photo } = req.body;
 
     const existing = await prisma.exhibition.findUnique({
         where: { id: Number(id) },
@@ -38,8 +38,8 @@ export const updateExhibition = async (req, res) => {
         return res.status(400).json({ message: "Exhibition tidak ditemukan" });
     }
 
-    if (!description || !date || !name) {
-        return res.status(400).json({ message: `Kolom ${!description ? "Deskripsi" : !date ? "Tanggal Acara" : "Nama"} harus diisi` });
+    if (!description || !description_en || !date || !name || !name_en) {
+        return res.status(400).json({ message: `Kolom ${!description ? "Deskripsi" : !description_en ? "Deskripsi (EN)" : !date ? "Tanggal Acara" : !name ? "Nama" : "Nama (EN)"} harus diisi` });
     }
 
     let fotoUrl = existing.photo;
@@ -67,7 +67,7 @@ export const updateExhibition = async (req, res) => {
 
     const data = await prisma.exhibition.update({
         where: { id: Number(id) },
-        data: { name, photo: fotoUrl, description, date: new Date(date).toISOString() }
+        data: { name, name_en, photo: fotoUrl, description, description_en, date: new Date(date).toISOString() }
     });
 
     res.json({ message: "Exhibition diperbarui", data });

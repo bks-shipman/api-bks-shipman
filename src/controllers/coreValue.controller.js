@@ -10,21 +10,26 @@ export const getCoreValues = async (req, res) => {
 };
 
 export const createCoreValue = async (req, res) => {
-    const { title } = req.body;
-    if (!title) {
-        return res.status(400).json({ message: "Layanan wajib diisi" });
+    const { title, title_en } = req.body;
+    if (!title || !title_en) {
+        return res.status(400).json({ message: "Layanan dan layanan (EN) wajib diisi" });
     }
 
-    const data = await prisma.coreValue.create({ data: { title } });
+    const data = await prisma.coreValue.create({ data: { title, title_en } });
     res.json({ message: "Core Value dibuat", data });
 };
 
 export const updateCoreValue = async (req, res) => {
     const { id } = req.params;
+    const { title, title_en } = req.body;
+
+    if (!title || !title_en) {
+        return res.status(400).json({ message: "Layanan dan layanan (EN) wajib diisi" });
+    }
 
     const data = await prisma.coreValue.update({
         where: { id: Number(id) },
-        data: req.body
+        data: { title, title_en },
     });
 
     res.json({ message: "Core Value diperbarui", data });

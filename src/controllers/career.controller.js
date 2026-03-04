@@ -11,24 +11,24 @@ export const getCareers = async (req, res) => {
 };
 
 export const createCareer = async (req, res) => {
-    const { title, positions, requirements } = req.body;
+    const { title, title_en, positions, positions_en, requirements, requirements_en } = req.body;
     const photo = req.file;
 
-    if (!title || !positions || !requirements || !photo) {
-        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !positions ? "Posisi" : !requirements ? "Persyaratan" : "Foto"} wajib diisi` });
+    if (!title || !title_en || !positions || !positions_en || !requirements || !requirements_en || !photo) {
+        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !title_en ? "Judul (EN)" : !positions ? "Posisi" : !positions_en ? "Posisi (EN)" : !requirements ? "Persyaratan" : !requirements_en ? "Persyaratan (EN)" : "Foto"} wajib diisi` });
     }
 
     const cloudinaryPhoto = await upload(photo, "careers");
-    const data = await prisma.career.create({ data: { title, positions, requirements, photo: cloudinaryPhoto.url } });
+    const data = await prisma.career.create({ data: { title, title_en, positions, positions_en, requirements, requirements_en, photo: cloudinaryPhoto.url } });
     res.json({ message: "Career dibuat", data });
 };
 
 export const updateCareer = async (req, res) => {
     const { id } = req.params;
-    const { title, positions, requirements, photo } = req.body;
+    const { title, title_en, positions, positions_en, requirements, requirements_en, photo } = req.body;
     const photoFile = req.file;
-    if (!title || !positions || !requirements) {
-        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !positions ? "Posisi" : "Persyaratan"} wajib diisi` });
+    if (!title || !title_en || !positions || !positions_en || !requirements || !requirements_en) {
+        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !title_en ? "Judul (EN)" : !positions ? "Posisi" : !positions_en ? "Posisi (EN)" : !requirements ? "Persyaratan" : !requirements_en ? "Persyaratan (EN)" : "Foto"} wajib diisi` });
     }
     const career = await prisma.career.findUnique({
         where: { id: Number(id) },
@@ -55,7 +55,7 @@ export const updateCareer = async (req, res) => {
 
     const data = await prisma.career.update({
         where: { id: Number(id) },
-        data: { title, positions, requirements, photo: fotoUrl },
+        data: { title, title_en, positions, positions_en, requirements, requirements_en, photo: fotoUrl },
     });
 
     res.json({ message: "Career diperbarui", data });

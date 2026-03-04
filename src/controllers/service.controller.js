@@ -10,20 +10,20 @@ export const getServices = async (req, res) => {
 };
 
 export const createService = async (req, res) => {
-    const { title, description } = req.body;
-    if (!title || !description) {
-        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : "Deskripsi"} wajib diisi` });
+    const { title, title_en, description, description_en } = req.body;
+    if (!title || !title_en || !description || !description_en) {
+        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !title_en ? "Judul (EN)" : !description ? "Deskripsi" : "Deskripsi (EN)"} wajib diisi` });
     }
 
-    const data = await prisma.service.create({ data: { title, description } });
+    const data = await prisma.service.create({ data: { title, title_en, description, description_en } });
     res.json({ message: "Service dibuat", data });
 };
 
 export const updateService = async (req, res) => {
     const { id } = req.params;
-    const { title, description } = req.body;
-    if (!title || !description) {
-        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : "Deskripsi"} wajib diisi` });
+    const { title, title_en, description, description_en } = req.body;
+    if (!title || !title_en || !description || !description_en) {
+        return res.status(400).json({ message: `Kolom ${!title ? "Judul" : !title_en ? "Judul (EN)" : !description ? "Deskripsi" : "Deskripsi (EN)"} wajib diisi` });
     }
     const service = await prisma.service.findUnique({
         where: { id: Number(id) },
@@ -35,7 +35,7 @@ export const updateService = async (req, res) => {
 
     const data = await prisma.service.update({
         where: { id: Number(id) },
-        data: req.body
+        data: { title, title_en, description, description_en }
     });
 
     res.json({ message: "Service diperbarui", data });

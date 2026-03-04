@@ -21,10 +21,10 @@ export const getVessels = async (req, res) => {
 
 export const createVessel = async (req, res) => {
     const photo = req.file;
-    const { name, description, imo, year, country, vesselTypeId } = req.body;
+    const { name, description, description_en, imo, year, country, vesselTypeId } = req.body;
 
-    if (!photo || !name || !description || !imo || !year || !country || !vesselTypeId) {
-        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !name ? "Nama" : !description ? "Deskripsi" : !imo ? "IMO" : !year ? "Tahun" : !country ? "Negara" : "Tipe Kapal"} harus diisi` });
+    if (!photo || !name || !description || !description_en || !imo || !year || !country || !vesselTypeId) {
+        return res.status(400).json({ message: `Kolom ${!photo ? "Foto" : !name ? "Nama" : !description ? "Deskripsi" : !description_en ? "Deskripsi (EN)" : !imo ? "IMO" : !year ? "Tahun" : !country ? "Negara" : "Tipe Kapal"} harus diisi` });
     }
     const cloudinaryPhoto = await upload(photo, "vessels");
 
@@ -40,6 +40,7 @@ export const createVessel = async (req, res) => {
         data: {
             name,
             description,
+            description_en,
             imo,
             year: Number(year),
             country,
@@ -57,7 +58,7 @@ export const createVessel = async (req, res) => {
 export const updateVessel = async (req, res) => {
     const { id } = req.params;
     const photoFile = req.file; // file upload
-    const { name, description, imo, year, country, vesselTypeId, photo } = req.body;
+    const { name, description, description_en, imo, year, country, vesselTypeId, photo } = req.body;
 
     const existing = await prisma.vessel.findUnique({
         where: { id: Number(id) },
@@ -107,6 +108,7 @@ export const updateVessel = async (req, res) => {
         data: {
             name,
             description,
+            description_en,
             imo,
             year: Number(year),
             country,

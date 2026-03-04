@@ -99,6 +99,7 @@ model Crewing {
 model Vision {
   id          Int    @id @default(autoincrement())
   description String
+  description_en String @default("english")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,6 +108,7 @@ model Vision {
 model Mission {
   id          Int    @id @default(autoincrement())
   description String
+  description_en String @default("english")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -119,6 +121,7 @@ model Mission {
 model CoreValue {
   id          Int    @id @default(autoincrement())
   title       String
+  title_en    String @default("english")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -131,7 +134,9 @@ model CoreValue {
 model Service {
   id          Int    @id @default(autoincrement())
   title       String
+  title_en       String @default("english")
   description String
+  description_en  String @default("english")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -160,6 +165,7 @@ model Vessel {
   name          String
   photo         String
   description   String
+  description_en   String @default("english")
   imo           String
   year          Int
   country       String
@@ -180,8 +186,10 @@ model Vessel {
 model Exhibition {
   id          Int      @id @default(autoincrement())
   name        String
+  name_en        String @default("english")
   photo       String
   description String
+  description_en String @default("english")
   date        DateTime
 
   createdAt DateTime @default(now())
@@ -195,6 +203,7 @@ model Exhibition {
 model AboutUs {
   id          Int    @id @default(autoincrement())
   description String
+  description_en String @default("english")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -220,8 +229,11 @@ model Certificate {
 model Career {
   id              Int    @id @default(autoincrement())
   title           String
+  title_en           String @default("english")
   positions       String
+  positions_en       String @default("english")
   requirements    String
+  requirements_en    String @default("english")
   photo           String
 
   createdAt DateTime @default(now())
@@ -236,6 +248,7 @@ model Captain {
   id          Int    @id @default(autoincrement())
   name        String
   quote       String
+  quote_en       String @default("english")
   photo       String
 
   createdAt DateTime @default(now())
@@ -249,9 +262,13 @@ model Captain {
 model Title {
   id          Int       @id @default(autoincrement())
   title       String
+  title_en    String  @default("english")
   title2      String?
+  title2_en      String?
   subtitle    String?
+  subtitle_en    String?
   tag         String?
+  tag_en         String?
   type        TitleType @unique
 
   createdAt DateTime @default(now())

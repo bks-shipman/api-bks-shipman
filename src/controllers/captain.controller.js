@@ -12,12 +12,12 @@ export const getCaptain = async (req, res) => {
 
 export const createOrUpdateCaptain = async (req, res) => {
     try {
-        const { name, quote, photo } = req.body;
+        const { name, quote, quote_en, photo } = req.body;
         const photoFile = req.file;
 
-        if (!name || !quote) {
+        if (!name || !quote || !quote_en) {
             return res.status(400).json({
-                message: `Kolom ${!name ? "Nama" : "Quote"} wajib diisi`,
+                message: `Kolom ${!name ? "Nama" : !quote ? "Quote" : "Quote (EN)"} wajib diisi`,
             });
         }
 
@@ -69,6 +69,7 @@ export const createOrUpdateCaptain = async (req, res) => {
                 data: {
                     name,
                     quote,
+                    quote_en,
                     photo: fotoUrl,
                 },
             })
@@ -76,6 +77,7 @@ export const createOrUpdateCaptain = async (req, res) => {
                 data: {
                     name,
                     quote,
+                    quote_en,
                     photo: fotoUrl,
                 },
             });
