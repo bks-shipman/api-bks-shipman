@@ -39,6 +39,7 @@ enum TitleType {
   GALLERY
   COREVALUES
   CERTIFICATES
+  PARTNERS
 
 }
 
@@ -305,7 +306,7 @@ model PageConfig {
   id        Int      @id @default(autoincrement())
   key       PageKey  @unique
   isActive  Boolean  @default(true)
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

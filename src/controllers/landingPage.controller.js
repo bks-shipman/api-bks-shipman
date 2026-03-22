@@ -96,6 +96,7 @@ export const getAboutUsData = async (req, res) => {
         const [
             aboutTitles,
             certificateTitles,
+            partnerTitles,
             aboutUs,
             certificates,
             partners
@@ -105,6 +106,9 @@ export const getAboutUsData = async (req, res) => {
             }),
             prisma.title.findFirst({
                 where: { type: "CERTIFICATES" },
+            }),
+            prisma.title.findFirst({
+                where: { type: "PARTNERS" },
             }),
             prisma.aboutUs.findFirst(),
             prisma.certificate.findMany({
@@ -118,6 +122,7 @@ export const getAboutUsData = async (req, res) => {
         res.json({
             aboutTitles,
             certificateTitles,
+            partnerTitles,
             aboutUs,
             certificates,
             partners
