@@ -97,7 +97,8 @@ export const getAboutUsData = async (req, res) => {
             aboutTitles,
             certificateTitles,
             aboutUs,
-            certificates
+            certificates,
+            partners
         ] = await Promise.all([
             prisma.title.findFirst({
                 where: { type: "ABOUTUS" },
@@ -109,13 +110,17 @@ export const getAboutUsData = async (req, res) => {
             prisma.certificate.findMany({
                 orderBy: { createdAt: "desc" },
             }),
+            prisma.partner.findMany({
+                orderBy: { createdAt: "desc" }
+            })
         ]);
 
         res.json({
             aboutTitles,
             certificateTitles,
             aboutUs,
-            certificates
+            certificates,
+            partners
         });
     } catch (error) {
         console.error(error);
@@ -130,6 +135,7 @@ export const getVesselData = async (req, res) => {
         const [
             titles,
             vessels,
+            visible
         ] = await Promise.all([
             prisma.title.findFirst({
                 where: { type: "VESSELS" },
@@ -142,11 +148,16 @@ export const getVesselData = async (req, res) => {
                 },
                 orderBy: { name: "asc" },
             }),
+            prisma.pageConfig.findUnique({
+                where: { key: "VESSELS" }
+            })
+
         ]);
 
         res.json({
             titles,
             vessels,
+            visible
         });
     } catch (error) {
         console.error(error);

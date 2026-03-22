@@ -8,6 +8,8 @@ import * as coreValueController from '../controllers/coreValue.controller.js';
 import * as exhibitionController from '../controllers/exhibition.controller.js';
 import * as missionController from '../controllers/mission.controller.js';
 import * as serviceController from '../controllers/service.controller.js';
+import * as pageConfigController from '../controllers/pageConfig.controller.js';
+import * as partnerController from '../controllers/partner.controller.js';
 import * as titleController from '../controllers/title.controller.js';
 import * as userController from '../controllers/user.controller.js';
 import * as vesselController from '../controllers/vessel.controller.js';
@@ -35,11 +37,20 @@ route.get('/vessel-page', landingPageController.getVesselData);
 route.get('/exhibition-page', landingPageController.getExhibitionData);
 route.get('/career-page', landingPageController.getCareerData);
 route.get('/footer-page', landingPageController.getFooterData);
+route.get('/page-status/:key', pageConfigController.getPageStatusByKey);
 
 // Route BackOffice
 
 // Route Dashboard
 route.get('/dashboard', auth, authorize("SUPERADMIN", "ADMIN"), dashboardController.getDashboardData);
+
+
+// --- AREA BACKOFFICE (Taruh di bawah Route Dashboard) ---
+// Untuk list semua config di tabel admin
+route.get('/page-configs', auth, authorize("SUPERADMIN", "ADMIN"), pageConfigController.getPageConfigs);
+
+// Untuk Toggle ON/OFF (Hanya ADMIN yang bisa eksekusi)
+route.patch('/page-configs/:key', auth, authorize("ADMIN"), pageConfigController.updatePageStatus);
 
 // Route About Us
 route.get('/about-us', auth, authorize("SUPERADMIN", "ADMIN"), aboutUsController.getAboutUs);
@@ -84,6 +95,12 @@ route.delete('/exhibitions', auth, authorize("ADMIN"), exhibitionController.dele
 // Route Mission
 route.get('/mission', auth, authorize("SUPERADMIN", "ADMIN"), missionController.getMission);
 route.post('/mission', auth, authorize("ADMIN"), missionController.createOrUpdateMission);
+
+// Route Partners
+route.get('/partners', auth, authorize("SUPERADMIN", "ADMIN"), partnerController.getPartner);
+route.post('/partners', auth, authorize("ADMIN"), upload.single("photo"), partnerController.createPartner);
+route.put('/partners/:id', auth, authorize("ADMIN"), upload.single("photo"), partnerController.updatePartner);
+route.delete('/partners', auth, authorize("ADMIN"), partnerController.deletePartner);
 
 // Route Service
 route.get('/services', auth, authorize("SUPERADMIN", "ADMIN"), serviceController.getServices);
