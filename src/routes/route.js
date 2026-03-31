@@ -47,7 +47,7 @@ route.get('/dashboard', auth, authorize("SUPERADMIN", "ADMIN"), dashboardControl
 
 // --- AREA BACKOFFICE (Taruh di bawah Route Dashboard) ---
 // Untuk list semua config di tabel admin
-route.get('/page-configs', auth, authorize("SUPERADMIN", "ADMIN"), pageConfigController.getPageConfigs);
+route.get('/page-configs', pageConfigController.getPageConfigs);
 
 // Untuk Toggle ON/OFF (Hanya ADMIN yang bisa eksekusi)
 route.patch('/page-configs/:key', auth, authorize("ADMIN"), pageConfigController.updatePageStatus);
