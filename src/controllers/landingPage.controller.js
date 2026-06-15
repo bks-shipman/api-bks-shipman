@@ -97,6 +97,8 @@ export const getAboutUsData = async (req, res) => {
             aboutTitles,
             certificateTitles,
             partnerTitles,
+            vision,
+            missions,
             aboutUs,
             certificates,
             partners
@@ -110,6 +112,8 @@ export const getAboutUsData = async (req, res) => {
             prisma.title.findFirst({
                 where: { type: "PARTNERS" },
             }),
+            prisma.vision.findFirst(),
+            prisma.mission.findFirst(),
             prisma.aboutUs.findFirst(),
             prisma.certificate.findMany({
                 orderBy: { createdAt: "desc" },
@@ -123,6 +127,8 @@ export const getAboutUsData = async (req, res) => {
             aboutTitles,
             certificateTitles,
             partnerTitles,
+            vision,
+            missions,
             aboutUs,
             certificates,
             partners
