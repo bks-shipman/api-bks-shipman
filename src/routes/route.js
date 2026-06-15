@@ -104,7 +104,7 @@ route.delete('/partners', auth, authorize("ADMIN"), partnerController.deletePart
 
 // Route Service
 route.get('/services', auth, authorize("SUPERADMIN", "ADMIN"), serviceController.getServices);
-route.get('/services/:id', auth, serviceController.getServiceById);
+route.get('/services/:id', serviceController.getServiceById);
 route.post('/services', auth, authorize("ADMIN"), serviceController.createService);
 route.put('/services/:id', auth, authorize("ADMIN"), serviceController.updateService);
 route.delete('/services', auth, authorize("ADMIN"), serviceController.deleteService);
