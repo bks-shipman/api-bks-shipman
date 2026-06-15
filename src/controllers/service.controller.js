@@ -48,3 +48,14 @@ export const deleteService = async (req, res) => {
 
     res.json({ message: "Service dihapus" });
 };
+
+export const getServiceById = async (req, res) => {
+    const { id } = req.params;
+    const data = await prisma.service.findUnique({
+        where: { id: Number(id) },
+    });
+    if (!data) {
+        return res.status(404).json({ message: "Service tidak ditemukan" });
+    }
+    res.json(data);
+}
